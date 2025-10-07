@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Random Quiz</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #83f1f1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .quiz-container {
+        background: #a8e7b1;
+        padding: 20px 40px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.2);
+        text-align: center;
+        width: 350px;
+    }
+    #options button {
+        display: block;
+        margin: 10px auto;
+        padding: 10px 20px;
+        width: 80%;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background: #fff;
+        transition: background 0.3s;
+    }
+    #options button:hover {
+        background: #c2f0c2;
+    }
+    #nextBtn, #restartBtn, #closeBtn {
+        margin-top: 15px;
+        padding: 10px 20px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        background: #00b894;
+        color: white;
+        transition: background 0.3s;
+    }
+    #nextBtn:hover, #restartBtn:hover, #closeBtn:hover {
+        background: #019870;
+    }
+    #closeBtn {
+        background: #d63031;
+    }
+    #closeBtn:hover {
+        background: #b71c1c;
+    }
+</style>
+</head>
+<body>
+<div class="quiz-container" id="quizContainer">
+    <h2>🧠Quiz</h2>
+    <p id="question">Question will appear here</p>
+    <div id="options"></div>
+    <button id="nextBtn" onclick="nextQuestion()">Next</button>
+    <p id="score"></p>
+    <button id="restartBtn" onclick="startQuiz()" style="display:none;">Restart Quiz</button>
+    <button id="closeBtn" onclick="closeQuiz()">Close Quiz</button>
+</div>
+
+<script>
+const allQuestions = [
+    {question: "What is the square root of 2025?", options: ["45","50","55","60"], answer: "45"},
+    {question: "Which data structure is fundamental?", options: ["Array","Linked List","Stack","All of the above"], answer: "All of the above"},
+    {question: "Purpose of Git?", options: ["Manage DB","Track code changes","Optimize code","Compile code"], answer: "Track code changes"},
+    {question: "Red Planet?", options: ["Venus","Mars","Jupiter","Saturn"], answer: "Mars"},
+    {question: "Capital of Canada?", options: ["Toronto","Vancouver","Ottawa","Montreal"], answer: "Ottawa"},
+    {question: "Greenhouse gas?", options: ["Oxygen","Nitrogen","Carbon Dioxide","Hydrogen"], answer: "Carbon Dioxide"},
+    {question: "Symbol for water?", options: ["H2O","CO2","O2","H2O2"], answer: "H2O"},
+    {question: "15% of 200?", options: ["25","30","35","40"], answer: "30"},
+    {question: "Assignment operator in JS?", options: ["=","==","===",":"], answer: "="},
+    {question: "Leading country in renewable energy?", options: ["USA","China","Germany","India"], answer: "China"}
+];
+
+let quizQuestions = [];
+let current = 0;
+let score = 0;
+let selected = "";
+
+// Shuffle and pick all 10 questions
+function pickRandomQuestions() {
+    return allQuestions.sort(() => Math.random() - 0.5);
+}
+
+// Load question
+function loadQuestion() {
+    selected = "";
+    document.getElementById("score").textContent = "";
+    const q = quizQuestions[current];
+    document.getElementById("question").textContent = `${current + 1}. ${q.question}`;
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+    q.options.forEach(opt => {
+        const btn = document.createElement("button");
+        btn.textContent = opt;
+        btn.onclick = () => { 
+            selected = opt; 
+            Array.from(optionsDiv.children).forEach(b => b.style.background="");
+            btn.style.background = "#d3f8d3";
+        };
+        optionsDiv.appendChild(btn);
+    });
+
+    // Change "Next" to "Finish" on the last question
+    if (current === quizQuestions.length - 1) {
+        document.getElementById("nextBtn").textContent = "Finish";
+    } else {
+        document.getElementById("nextBtn").textContent = "Next";
+    }
+}
+
+// Next question
+function nextQuestion() {
+    if(selected === "") { alert("Please select an option!"); return; }
+    if(selected === quizQuestions[current].answer) score++;
+    current++;
+    if(current < quizQuestions.length) loadQuestion();
+    else showScore();
+}
+
+// Show score and restart
+function showScore() {
+    document.getElementById("question").textContent = "🎉 Quiz Completed!";
+    document.getElementById("options").innerHTML = "";
+    document.getElementById("score").textContent = `Your score: ${score} / ${quizQuestions.length}`;
+    document.getElementById("nextBtn").style.display = "none";
+    document.getElementById("restartBtn").style.display = "inline";
+}
+
+// Start or restart quiz
+function startQuiz() {
+    quizQuestions = pickRandomQuestions();
+    current = 0;
+    score = 0;
+    selected = "";
+    document.getElementById("quizContainer").style.display = "block";
+    document.getElementById("nextBtn").style.display = "inline";
+    document.getElementById("restartBtn").style.display = "none";
+    loadQuestion();
+}
+
+// Close quiz
+function closeQuiz() {
+    document.getElementById("quizContainer").style.display = "none";
+}
+
+// Start first quiz automatically
+startQuiz();
+</script>
+</body>
+</html>

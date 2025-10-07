@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>To-Do List with Time</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #89f7fe, #66a6ff);
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+        margin: 0;
+        padding-top: 60px;
+    }
+    .todo-container {
+        background: #fff;
+        padding: 25px 35px;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        width: 350px;
+        text-align: center;
+    }
+    h2 {
+        color: #333;
+        margin-bottom: 15px;
+    }
+    input[type="text"], input[type="time"] {
+        width: 65%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    input[type="time"] {
+        width: 30%;
+    }
+    button {
+        padding: 8px 12px;
+        border: none;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+    }
+    li {
+        padding: 10px;
+        margin: 6px 0;
+        background: #f9f9f9;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    li span {
+        flex: 1;
+        text-align: left;
+    }
+    li small {
+        color: #666;
+        font-size: 0.85em;
+    }
+    .action-btns button {
+        background-color: #2196F3;
+        margin-left: 5px;
+    }
+    .action-btns button.delete {
+        background-color: #f44336;
+    }
+</style>
+</head>
+<body>
+
+<div class="todo-container">
+    <h2>📝 To-Do List</h2>
+    <div>
+        <input type="text" id="taskInput" placeholder="Enter a task">
+        <input type="time" id="taskTime">
+        <button onclick="addTask()">Add</button>
+    </div>
+    <ul id="taskList"></ul>
+</div>
+
+<script>
+let tasks = [];
+
+function addTask() {
+    const taskInput = document.getElementById("taskInput");
+    const timeInput = document.getElementById("taskTime");
+    const taskText = taskInput.value.trim();
+    const taskTime = timeInput.value;
+
+    if(taskText === "") {
+        alert("Please enter a task!");
+        return;
+    }
+
+    const task = {
+        text: taskText,
+        time: taskTime || "Not set"
+    };
+
+    tasks.push(task);
+    taskInput.value = "";
+    timeInput.value = "";
+    renderTasks();
+}
+
+function renderTasks() {
+    const taskList = document.getElementById("taskList");
+    taskList.innerHTML = "";
+    tasks.forEach((task, index) => {
+        const li = document.createElement("li");
+
+        const taskInfo = document.createElement("span");
+        taskInfo.innerHTML = `${task.text} <br><small>🕒 ${task.time}</small>`;
+        li.appendChild(taskInfo);
+
+        const actionDiv = document.createElement("div");
+        actionDiv.className = "action-btns";
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+        editBtn.onclick = () => editTask(index);
+        actionDiv.appendChild(editBtn);
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Delete";
+        deleteBtn.className = "delete";
+        deleteBtn.onclick = () => deleteTask(index);
+        actionDiv.appendChild(deleteBtn);
+
+        li.appendChild(actionDiv);
+        taskList.appendChild(li);
+    });
+}
+
+function editTask(index) {
+    const newTask = prompt("Edit task:", tasks[index].text);
+    const newTime = prompt("Edit time (HH:MM):", tasks[index].time);
+    if(newTask !== null && newTask.trim() !== "") {
+        tasks[index].text = newTask.trim();
+        if(newTime) tasks[index].time = newTime;
+        renderTasks();
+    }
+}
+
+function deleteTask(index) {
+    tasks.splice(index, 1);
+    renderTasks();
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Simple Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    form {
+      width: 350px;
+    }
+
+    fieldset {
+      background-color: #fff8dc;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+    }
+
+    legend {
+      font-size: 1.5em;
+      font-weight: bold;
+      text-align: center;
+      color: #333;
+    }
+
+    input[type="number"] {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+      font-size: 1em;
+      box-sizing: border-box;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    input[type="button"] {
+      flex: 1 1 45%;
+      padding: 10px;
+      font-size: 1em;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    input[type="button"]:hover {
+      background-color: #45a049;
+    }
+
+    output {
+      display: block;
+      margin-top: 10px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+      text-align: center;
+    }
+  </style>
+
+  <script>
+    function calcu(op) {
+      var n1 = parseFloat(document.getElementById('a').value);
+      var n2 = parseFloat(document.getElementById('b').value);
+      let r = '';
+
+      if (isNaN(n1) || isNaN(n2)) {
+        r = 'Enter valid numbers';
+      } else {
+        switch (op) {
+          case 'add':
+            r = n1 + n2;
+            break;
+          case 'sub':
+            r = n1 - n2;
+            break;
+          case 'mul':
+            r = n1 * n2;
+            break;
+          case 'div':
+            r = n2 === 0 ? 'Cannot divide by zero' : n1 / n2;
+            break;
+        }
+      }
+
+      document.getElementById('re').textContent = r;
+    }
+  </script>
+</head>
+
+<body>
+  <form>
+    <fieldset>
+      <legend>CALCULATOR</legend>
+
+      <label>Enter the first number:</label>
+      <input type="number" id="a">
+
+      <label>Enter the second number:</label>
+      <input type="number" id="b">
+
+      <div class="buttons">
+        <input type="button" value="Add" onclick="calcu('add')">
+        <input type="button" value="Subtract" onclick="calcu('sub')">
+        <input type="button" value="Multiply" onclick="calcu('mul')">
+        <input type="button" value="Divide" onclick="calcu('div')">
+      </div>
+
+      <output id="re">Result</output>
+    </fieldset>
+  </form>
+</body>
+</html>
